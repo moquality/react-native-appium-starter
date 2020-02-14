@@ -1,3 +1,4 @@
+const path = require("path");
 const assert = require("assert");
 const expect = require("chai").expect;
 
@@ -13,7 +14,7 @@ describe("Running a sample test", function() {
     return await driver.init({
       platformName: "Android",
       deviceName: "Android Emulator",
-      app: "/Users/pushkar/Stash/om_detox_example/app.apk",
+      app: path.join(process.cwd(), "app.apk"),
       appWaitActivity: "*",
       automationName: "UiAutomator2",
       androidInstallTimeout: 20000
@@ -26,13 +27,20 @@ describe("Running a sample test", function() {
 
   beforeEach(async () => {
     await driver.sleep(5000);
-    const isWelcomeScreen = await driver.elementByAccessibilityId("welcome").isDisplayed();
-    console.log("Welcome button is displayed ?", isWelcomeScreen)
+    const isWelcomeScreen = await driver
+      .elementByAccessibilityId("welcome")
+      .isDisplayed();
+    expect(isWelcomeScreen).to.be.true;
   });
 
   it("should show hello screen after tap", async () => {
     const helloBtn = await driver.elementByAccessibilityId("hello_button");
     await helloBtn.click();
+    const isHello = await driver
+      .elementByAndroidUIAutomator(
+        'new UiSelector().className("android.widget.TextView").text("Hello!!!")'
+      )
+      .then(target => target.isDisplayed());
+    expect(isHello).to.be.true;
   });
-
 });
