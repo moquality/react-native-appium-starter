@@ -36,11 +36,8 @@ describe("Running a sample test", function() {
   it("should show hello screen after tap", async () => {
     const helloBtn = await driver.elementByAccessibilityId("hello_button");
     await helloBtn.click();
-    const isHello = await driver
-      .elementByAndroidUIAutomator(
-        'new UiSelector().className("android.widget.TextView").text("Hello!!!")'
-      )
-      .then(target => target.isDisplayed());
-    expect(isHello).to.be.true;
+    const isHello = await driver.elementByAndroidUIAutomator('new UiSelector().className("android.widget.TextView").text("Hello!!!")');
+    const isHelloDisplayed = await isHello.isDisplayed();
+    expect(isHelloDisplayed).to.be.true;
   });
 });
